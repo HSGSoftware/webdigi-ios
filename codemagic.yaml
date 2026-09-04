@@ -19,22 +19,26 @@ workflows:
           set -e
           keychain initialize
 
-          # Özel anahtar üret ve sertifikayı Apple'da aç
           openssl genrsa -out /tmp/cert_key.pem 2048
+
           app-store-connect certificates create \
             --type IOS_DISTRIBUTION \
             --certificate-key=@file:/tmp/cert_key.pem \
-            --save || echo "sertifika mevcut, devam ediliyor"
+            --save
 
           app-store-connect fetch-signing-files com.webdigistore.kur \
             --type IOS_APP_STORE --platform IOS --create \
             --certificate-key=@file:/tmp/cert_key.pem
+
           app-store-connect fetch-signing-files com.webdigistore.kur.Clip \
             --type IOS_APP_STORE --platform IOS --create \
             --certificate-key=@file:/tmp/cert_key.pem
 
           keychain add-certificates
           xcode-project use-profiles --warn-only
+
+          echo "--- profiller ---"
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/ || echo "PROFIL YOK"
       - name: Build numarasını artır
         script: |
           BUILD=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" 2>/dev/null || echo 0)
