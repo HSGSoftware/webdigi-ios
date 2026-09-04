@@ -6,21 +6,22 @@ workflows:
     integrations:
       app_store_connect: WebDigi ASC Key
     environment:
+      groups:
+        - apple
       xcode: latest
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.webdigistore.kur
-      vars:
-        DEVELOPMENT_TEAM: $DEVELOPMENT_TEAM   # Codemagic → app → Environment variables'a ekle
     scripts:
       - name: Xcode projesini üret
         script: |
           brew install xcodegen
           xcodegen generate
-      - name: İmzalama dosyalarını çek (app + clip)
+      - name: İmzalama dosyalarını üret ve uygula
         script: |
-          app-store-connect fetch-signing-files com.webdigistore.kur      --type IOS_APP_STORE --create
-          app-store-connect fetch-signing-files com.webdigistore.kur.Clip --type IOS_APP_STORE --create
+          keychain initialize
+          app-store-connect fetch-signing-files com.webdigistore.kur \
+            --type IOS_APP_STORE --create
+          app-store-connect fetch-signing-files com.webdigistore.kur.Clip \
+            --type IOS_APP_STORE --create
+          keychain add-certificates
           xcode-project use-profiles
       - name: Build numarasını artır
         script: |
