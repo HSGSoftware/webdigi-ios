@@ -3,7 +3,6 @@ options:
   bundleIdPrefix: com.webdigistore
   deploymentTarget:
     iOS: "16.0"
-  xcodeVersion: "16.0"
   createIntermediateGroups: true
 
 settings:
@@ -37,6 +36,9 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.webdigistore.kur
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "Apple Distribution"
+        DEVELOPMENT_TEAM: $(DEVELOPMENT_TEAM)
     dependencies:
       - target: WebDigiClip
         embed: true
@@ -69,6 +71,9 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.webdigistore.kur.Clip
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "Apple Distribution"
+        DEVELOPMENT_TEAM: $(DEVELOPMENT_TEAM)
 
 schemes:
   WebDigi:
